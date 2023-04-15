@@ -41,19 +41,19 @@ namespace unturned
 		}
 	}
 
-	inline uintptr_t get_static_provider()
+	inline uintptr_t get_static_provider() // Provider
 	{
 		static auto inst = classes::provider->get_vtable(mono::get_root_domain())->get_static_field_data();
 		return inst;
 	}
 
-	inline uintptr_t get_static_player()
+	inline uintptr_t get_static_player() // (Player) Player.player
 	{
 		static auto inst = classes::player->get_vtable(mono::get_root_domain())->get_static_field_data();
 		return inst;
 	}
 
-	inline uintptr_t get_local_steamplayer()
+	inline uintptr_t get_local_steamplayer() // (SteamPlayer) Player.player.channel.owner
 	{
 		auto splr = get_static_player();
 		auto plr = read<uintptr_t>(splr + offsets::player);
