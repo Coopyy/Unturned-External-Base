@@ -56,3 +56,23 @@ namespace mem
 {
 	extern void init();
 }
+
+template <class dataType>
+class Field
+{
+	uintptr_t instance;
+	uintptr_t offset;
+public:
+	Field(uintptr_t ins, uintptr_t ofs) : instance{ ins }, offset { ofs }
+	{
+
+	}
+	dataType Read()
+	{
+		return read<dataType>(instance + offset);
+	}
+	void Write(dataType value)
+	{
+		write<dataType>(value, instance + offset);
+	}
+};

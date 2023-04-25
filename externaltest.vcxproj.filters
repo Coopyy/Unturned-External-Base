@@ -21,6 +21,12 @@
     <ClCompile Include="external\mem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="external\unturned.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\types\types.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\mem.h">
@@ -33,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="external\log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\types\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
