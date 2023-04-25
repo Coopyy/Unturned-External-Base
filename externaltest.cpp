@@ -1,4 +1,4 @@
-#include "external/types/types.h"
+#include "external/types/game.h"
 using namespace std;
 
 int main()
@@ -17,7 +17,8 @@ int main()
 
 	auto localPlayer = SDG::Player::player();
 
-	Log("Player.player -> 0x%p\n", localPlayer);
+	Log("Player.player.gameObject -> 0x%p", localPlayer->gameObject());
+	Log("Local Position: %s\n", localPlayer->gameObject()->transform()->position()->Read().ToString().c_str());
 
 	auto adminField = localPlayer->channel()->owner()->admin();
 

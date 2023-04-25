@@ -1,14 +1,8 @@
-#ifndef TYPES_H
-#define TYPES_H
+#ifndef GAME_H
+#define GAME_H
 
 #include "../unturned.h"
-
-#define thisptr reinterpret_cast<uintptr_t>(this)
-
-#define addfield(return_type, klass, name, offset) Field<return_type>* klass::name() { static auto field = new Field<return_type>(thisptr, offset); return field; }
-#define addref(return_type, klass, name, offset) return_type klass::name() { return (return_type)read<uintptr_t>(thisptr + offset); }
-#define addstaticref(return_type, klass, name, offset) return_type klass::name() { return (return_type)read<uintptr_t>(instance() + offset); }
-#define addstaticfield(return_type, klass, name, offset) Field<return_type>* klass::name() { static auto field = new Field<return_type>(instance(), offset); return field; }
+#include "unity.h"
 
 namespace SDG
 {
@@ -43,6 +37,7 @@ namespace SDG
 		static Player* player(); // Player.player
 		SteamChannel* channel();
 		Equipment* equipment();
+		Unity::GameObject* gameObject();
 	};
 
 	class Provider
@@ -55,8 +50,6 @@ namespace SDG
 	public:
 		static Field<bool>* isConnected();
 	};
-
-	
 
 	class Equipment
 	{

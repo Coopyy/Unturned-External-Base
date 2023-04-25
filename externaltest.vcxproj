@@ -132,14 +132,16 @@
   <ItemGroup>
     <ClCompile Include="externaltest.cpp" />
     <ClCompile Include="external\mem.cpp" />
-    <ClCompile Include="external\types\types.cpp" />
+    <ClCompile Include="external\types\game.cpp" />
+    <ClCompile Include="external\types\unity.cpp" />
     <ClCompile Include="external\unturned.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\log.h" />
     <ClInclude Include="external\mem.h" />
     <ClInclude Include="external\mono.h" />
-    <ClInclude Include="external\types\types.h" />
+    <ClInclude Include="external\types\game.h" />
+    <ClInclude Include="external\types\unity.h" />
     <ClInclude Include="external\unturned.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

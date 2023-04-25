@@ -25,18 +25,18 @@ extern HANDLE hProc;
 
 //WPM wrapper - Lets us call WriteProcessMemory MUCH more easily (with less args)
 template <class dataType>
-void write(dataType valToWrite, DWORD64 addressToWrite)
+inline void write(dataType valToWrite, DWORD64 addressToWrite)
 {
 	WriteProcessMemory(hProc, (PVOID)addressToWrite, &valToWrite, sizeof(dataType), 0);
 }
 
 //RPM wrapper - Lets us call ReadProcessMemory MUCH more easily (with less args)
 template <class dataType>
-dataType read(DWORD64 addressToRead)
+inline dataType read(DWORD64 addressToRead)
 {
 	//Stores the value of the address being read
-	dataType rpmBuffer;
 
+	dataType rpmBuffer;
 	//RPM
 	ReadProcessMemory(hProc, (PVOID)addressToRead, &rpmBuffer, sizeof(dataType), 0);
 

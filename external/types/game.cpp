@@ -1,10 +1,12 @@
-#include "types.h"
+#include "game.h"
 
 namespace SDG
 {
 	addstaticref(Player*, Player, player, Offsets::_player);
 	addref(Equipment*, Player, equipment, Offsets::_equipment);
 	addref(SteamChannel*, Player, channel, Offsets::channel);
+	addgoref(Player);
+
 
 	addref(SteamPlayer*, SteamChannel, owner, Offsets::owner); //equates to SteamPlayer* SteamChannel::owner() ...
 

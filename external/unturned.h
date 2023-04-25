@@ -3,6 +3,14 @@
 
 #include "mono.h"
 
+#define thisptr reinterpret_cast<uintptr_t>(this)
+
+#define addfield(return_type, klass, name, offset) Field<return_type>* klass::name() { static auto field = new Field<return_type>(thisptr, offset); return field; }
+#define addref(return_type, klass, name, offset) return_type klass::name() { return (return_type)read<uintptr_t>(thisptr + offset); }
+#define addstaticref(return_type, klass, name, offset) return_type klass::name() { return (return_type)read<uintptr_t>(instance() + offset); }
+#define addstaticfield(return_type, klass, name, offset) Field<return_type>* klass::name() { static auto field = new Field<return_type>(instance(), offset); return field; }
+#define addgoref(klass) Unity::GameObject* klass::gameObject() { return (Unity::GameObject*)read<uintptr_t>(read<uintptr_t>(thisptr + 0x10) + 0x30);  }
+
 namespace Classes
 {
 	extern mono_class_t* Provider;

@@ -24,7 +24,10 @@
     <ClCompile Include="external\unturned.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="external\types\types.cpp">
+    <ClCompile Include="external\types\game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\types\unity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,7 +44,10 @@
     <ClInclude Include="external\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="external\types\types.h">
+    <ClInclude Include="external\types\game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\types\unity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
