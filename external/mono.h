@@ -1,3 +1,5 @@
+// note all these methods are before the recent unity ver change, they should work but i havent tested
+
 #pragma once
 #include <Windows.h>
 #include <codecvt>
@@ -6,7 +8,7 @@
 
 #define OFFSET(func, type, offset) type func { return read<type>( reinterpret_cast<uintptr_t>( this ) + offset ); } 
 
-constexpr auto GET_ROOT_DOMAIN_OFFSET = 0x49dd18;;
+constexpr auto GET_ROOT_DOMAIN_OFFSET = 0x72F020;
 
 inline std::unordered_map<uintptr_t, uintptr_t> functions;
 
@@ -32,9 +34,9 @@ struct glist_t
 
 struct mono_root_domain_t
 {
-	OFFSET(domain_assemblies(), glist_t*, 0xC8)
-	OFFSET(domain_id(), int, 0xBC)
-	OFFSET(jitted_function_table(), uintptr_t, 0x148)
+	OFFSET(domain_assemblies(), glist_t*, 0xA0)
+	OFFSET(domain_id(), int, 0xBC) // untested
+	OFFSET(jitted_function_table(), uintptr_t, 0x148) // untested
 };
 
 struct mono_table_info_t
@@ -290,7 +292,7 @@ namespace mono
 
 	inline mono_assembly_t* domain_assembly_open(mono_root_domain_t* domain, const char* name)
 	{
-		auto domain_assemblies = domain->domain_assemblies();
+		auto domain_assemblies = *(glist_t**)(domain->domain_assemblies() + 0x8); // dont ask just works
 		if (!domain_assemblies)
 			return nullptr;
 
