@@ -1,5 +1,3 @@
-// note all these methods are before the recent unity ver change, they should work but i havent tested
-
 #pragma once
 #include <Windows.h>
 #include <codecvt>
@@ -29,21 +27,23 @@ inline std::string read_widechar(const std::uintptr_t address, const std::size_t
 struct glist_t
 {
 	OFFSET(data(), uintptr_t, 0x0)
-	OFFSET(next(), uintptr_t, 0x8)
+		OFFSET(next(), uintptr_t, 0x8)
 };
 
 struct mono_root_domain_t
 {
 	OFFSET(domain_assemblies(), glist_t*, 0xA0)
-	OFFSET(domain_id(), int, 0x94)
-	OFFSET(jitted_function_table(), uintptr_t, 0x148) // untested
+		OFFSET(domain_id(), int, 0x94)
+		OFFSET(jitted_function_table(), uintptr_t, 0x148) // untested
 };
 
 struct mono_table_info_t
 {
 	int get_rows()
 	{
-		return read<int>(reinterpret_cast<uintptr_t>(this) + 0x8) & 0xFFFFFF;
+		auto count = read<int>(reinterpret_cast<uintptr_t>(this) + 0x8) & 0xFFFFFF;
+		//printf("count: %d\n", count);
+		return count;
 	}
 };
 
@@ -88,12 +88,25 @@ struct mono_class_runtime_info_t
 
 struct mono_vtable_t
 {
-	OFFSET(flags(), byte, 0x2E)
+	//OFFSET(flags(), byte, 0x2E)
 
-		uintptr_t get_static_field_data()
+		/*
+
+
+void *__fastcall mono_vtable_get_static_field_data(MonoVTable *vt)
+{
+  if ( (*(vt + 48) & 4) != 0 )
+	return vt->vtable[vt->klass->vtable_size];
+  else
+	return 0i64;
+}
+
+		*/
+
+	uintptr_t get_static_field_data()
 	{
-		if ((this->flags() & 4) != 0)
-			return read<uintptr_t>(reinterpret_cast<uintptr_t>(this) + 0x40 + 8 * read<int>(read<uintptr_t>(reinterpret_cast<uintptr_t>(this) + 0x0) + 0x5c));
+		if (((read<uintptr_t>(reinterpret_cast<uintptr_t>(this) + 48)) & 4) != 0)
+			return read<uintptr_t>(reinterpret_cast<uintptr_t>(this) + 0x48 + 8 * read<int>(read<uintptr_t>(reinterpret_cast<uintptr_t>(this) + 0x0) + 0x5c));
 
 		return 0;
 	}
@@ -198,7 +211,7 @@ struct mono_class_t
 			const auto field = this->get_field(i);
 			if (!field)
 				continue;
-
+			
 			if (!strcmp(field->name().c_str(), field_name))
 				return field;
 		}
@@ -209,7 +222,7 @@ struct mono_class_t
 
 struct mono_hash_table_t
 {
-	OFFSET(size(), int, 0x18)
+	OFFSET(size(), uint32_t, 0x18)
 		OFFSET(data(), uintptr_t, 0x20)
 		OFFSET(next_value(), void*, 0x108)
 		OFFSET(key_extract(), unsigned int, 0x58)
@@ -240,8 +253,7 @@ struct mono_image_t
 	{
 		if (table_id > 55)
 			return nullptr;
-
-		return reinterpret_cast<mono_table_info_t*>(reinterpret_cast<uintptr_t>(this) + 0x10 * (static_cast<int>(table_id) + 0xE));
+		return reinterpret_cast<mono_table_info_t*>(reinterpret_cast<uintptr_t>(this) + 0x10 /*size?*/ * (static_cast<int>(table_id) + 0xE));
 	}
 
 	mono_class_t* get(const int type_id)
@@ -252,7 +264,7 @@ struct mono_image_t
 		if ((type_id & 0xFF000000) != 0x2000000)
 			return nullptr;
 
-		return reinterpret_cast<mono_hash_table_t*>(this + 0x4C0)->lookup<mono_class_t>(reinterpret_cast<void*>(type_id));
+		return reinterpret_cast<mono_hash_table_t*>(this + 0x4D0)->lookup<mono_class_t>(reinterpret_cast<void*>(type_id));
 	}
 };
 
@@ -292,7 +304,7 @@ namespace mono
 
 	inline mono_assembly_t* domain_assembly_open(mono_root_domain_t* domain, const char* name)
 	{
-		auto domain_assemblies = domain->domain_assemblies(); // nvm i guess
+		auto domain_assemblies = domain->domain_assemblies();
 		if (!domain_assemblies)
 			return nullptr;
 
@@ -328,19 +340,26 @@ namespace mono
 		if (!mono_image)
 			return nullptr;
 
-		const auto table_info = mono_image->get_table_info(2);
+		//printf("mono_image: 0x%p\n", mono_image);
+
+		const auto table_info = mono_image->get_table_info(3); // 3 now?
 		if (!table_info)
 			return nullptr;
-
+		//printf("table_info: 0x%p\n", table_info);
+		auto tbl = static_cast<mono_hash_table_t*>(reinterpret_cast<void*>(mono_image + 0x4D0));
 		for (int i = 0; i < table_info->get_rows(); i++)
 		{
-			const auto ptr = static_cast<mono_hash_table_t*>(reinterpret_cast<void*>(mono_image + 0x4C0))->lookup<mono_class_t>(reinterpret_cast<void*>(0x02000000 | i + 1));
+			//printf("i: %d\n", i);
+			//printf("tbl: 0x%p\n", tbl);
+			const auto ptr = tbl->lookup<mono_class_t>(reinterpret_cast<void*>(0x02000000 | i + 1));
+			//printf("ptr: 0x%p\n", ptr);
 			if (!ptr)
 				continue;
 
 			auto name = ptr->name();
 			if (!ptr->namespace_name().empty())
 				name = ptr->namespace_name().append(".").append(ptr->name());
+			//printf("name: %s\n", name.c_str());
 
 			if (!strcmp(name.c_str(), class_name))
 				return ptr;
