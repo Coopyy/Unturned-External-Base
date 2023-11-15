@@ -292,7 +292,7 @@ namespace mono
 
 	inline mono_assembly_t* domain_assembly_open(mono_root_domain_t* domain, const char* name)
 	{
-		auto domain_assemblies = *(glist_t**)(domain->domain_assemblies() + 0x8); // dont ask just works
+		auto domain_assemblies = domain->domain_assemblies(); // nvm i guess
 		if (!domain_assemblies)
 			return nullptr;
 
