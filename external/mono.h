@@ -102,7 +102,7 @@ struct mono_vtable_t
 struct mono_class_t
 {
 	OFFSET(num_fields(), int, 0x100)
-		OFFSET(runtime_info(), mono_class_runtime_info_t*, 0x1D8)
+		OFFSET(runtime_info(), mono_class_runtime_info_t*, 0xD0)
 
 		std::string name()
 	{
