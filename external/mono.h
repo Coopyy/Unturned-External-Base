@@ -35,7 +35,7 @@ struct glist_t
 struct mono_root_domain_t
 {
 	OFFSET(domain_assemblies(), glist_t*, 0xA0)
-	OFFSET(domain_id(), int, 0xBC) // untested
+	OFFSET(domain_id(), int, 0x94)
 	OFFSET(jitted_function_table(), uintptr_t, 0x148) // untested
 };
 
@@ -88,7 +88,7 @@ struct mono_class_runtime_info_t
 
 struct mono_vtable_t
 {
-	OFFSET(flags(), byte, 0x30)
+	OFFSET(flags(), byte, 0x2E)
 
 		uintptr_t get_static_field_data()
 	{
@@ -102,7 +102,7 @@ struct mono_vtable_t
 struct mono_class_t
 {
 	OFFSET(num_fields(), int, 0x100)
-		OFFSET(runtime_info(), mono_class_runtime_info_t*, 0xd0)
+		OFFSET(runtime_info(), mono_class_runtime_info_t*, 0x1D8)
 
 		std::string name()
 	{
