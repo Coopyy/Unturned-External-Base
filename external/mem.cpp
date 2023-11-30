@@ -1,6 +1,6 @@
 #include "mono.h"
 
-//nulls memory
+// change me to use your driver and stuff
 
 //Vars to use
 DWORD64 baseAddress = NULL;
@@ -91,7 +91,7 @@ DWORD64 getModule(const char* moduleName)
 	return false;
 }
 
-std::uint32_t find(const char* proc)
+std::uint32_t getProcessId(const char* proc)
 {
 	auto snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	PROCESSENTRY32 pe;
@@ -112,7 +112,7 @@ std::uint32_t find(const char* proc)
 	return 0;
 }
 
-namespace mem
+namespace Memory
 {
 	void init()
 	{

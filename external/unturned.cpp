@@ -32,14 +32,17 @@ namespace Offsets
 
 	uintptr_t _isConnected;
 	uintptr_t isLoadingUGC;
+	uintptr_t _clients;
 
 	uintptr_t channel;
 	uintptr_t owner;
+
 	uintptr_t _isAdmin;
+	uintptr_t _splayer; //SteamPlayer's player field (you can see this way of doing offsets isnt very scalable as many classes have the same field name)
+	uintptr_t _joined;
 
 	uintptr_t _equipment;
 	uintptr_t _asset;
-	uintptr_t _joined;
 
 	uintptr_t recoilMin_x;
 	uintptr_t recoilMax_x;
@@ -56,9 +59,11 @@ namespace Offsets
 
 		_isConnected = Classes::Provider->find_field("_isConnected")->offset();
 		isLoadingUGC = Classes::Provider->find_field("isLoadingUGC")->offset();
+		_clients = Classes::Provider->find_field("_clients")->offset();
 
 		_isAdmin = Classes::SteamPlayer->find_field("_isAdmin")->offset();
 		_joined = Classes::SteamPlayer->find_field("_joined")->offset();
+		_splayer = Classes::SteamPlayer->find_field("_player")->offset();
 
 		owner = Classes::SteamChannel->find_field("owner")->offset();
 

@@ -17,44 +17,38 @@ namespace SDG
 	class SteamPlayer
 	{
 	public:
-		Field<bool>* admin();
+		FIELD_DEC(Player*, player);
+		FIELD_DEC(bool, admin);
 	};
 
 	class SteamChannel
 	{
 	public:
-		SteamPlayer* owner();
+		FIELD_DEC(SteamPlayer*, owner);
 	};
-	
+
 	class Player
 	{
-		static uintptr_t instance()
-		{
-			static auto inst = Classes::Player->get_vtable(mono::get_root_domain())->get_static_field_data();
-			return inst;
-		}
+		INSTANCE_DEF(Classes::Player);
 	public:
-		static Player* player(); // Player.player
-		SteamChannel* channel();
-		Equipment* equipment();
+		FIELD_DEC(SteamChannel*, channel);
+		FIELD_DEC(Equipment*, equipment);
+		STATIC_FIELD_DEC(Player*, player);
 		Unity::GameObject* gameObject();
 	};
 
 	class Provider
 	{
-		static uintptr_t instance()
-		{
-			static auto inst = Classes::Provider->get_vtable(mono::get_root_domain())->get_static_field_data();
-			return inst;
-		}
+		INSTANCE_DEF(Classes::Provider);
 	public:
-		static Field<bool>* isConnected();
+		STATIC_FIELD_DEC(bool, isConnected);
+		STATIC_FIELD_DEC(Unity::Array<SteamPlayer*>*, clients);
 	};
 
 	class Equipment
 	{
 	public:
-		Asset* asset();
+		FIELD_DEC(Asset*, asset);
 	};
 
 	class Asset
@@ -65,11 +59,11 @@ namespace SDG
 	class ItemGunAsset
 	{
 	public:
-		Field<float>* recoilMin_x();
-		Field<float>* recoilMax_x();
-		Field<float>* recoilMin_y();
-		Field<float>* recoilMax_y();
-		Field<float>* baseSpreadAngleRadians();
+		FIELD_DEC(float, recoilMin_x);
+		FIELD_DEC(float, recoilMax_x);
+		FIELD_DEC(float, recoilMin_y);
+		FIELD_DEC(float, recoilMax_y);
+		FIELD_DEC(float, baseSpreadAngleRadians);
 	};
 }
 

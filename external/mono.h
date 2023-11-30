@@ -4,9 +4,11 @@
 #include <unordered_map>
 #include "mem.h"
 
+// NOTE: most of this has been updated to latest unity ver, but only functions used in the repo have been tested (the most important stuff)
+
 #define OFFSET(func, type, offset) type func { return read<type>( reinterpret_cast<uintptr_t>( this ) + offset ); } 
 
-constexpr auto GET_ROOT_DOMAIN_OFFSET = 0x72F020;
+constexpr auto GET_ROOT_DOMAIN_OFFSET = 0x72F020; // NOTE: can easily update by finding the address that mono_get_root_domain returns by disassembling the mono dll in ida (i dont see you needing to do this anyitme soon)
 
 inline std::unordered_map<uintptr_t, uintptr_t> functions;
 

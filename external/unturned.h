@@ -3,13 +3,49 @@
 
 #include "mono.h"
 
-#define thisptr reinterpret_cast<uintptr_t>(this)
+#define THISPTR reinterpret_cast<uintptr_t>(this)
 
-#define addfield(return_type, klass, name, offset) Field<return_type>* klass::name() { static auto field = new Field<return_type>(thisptr, offset); return field; }
-#define addref(return_type, klass, name, offset) return_type klass::name() { return (return_type)read<uintptr_t>(thisptr + offset); }
-#define addstaticref(return_type, klass, name, offset) return_type klass::name() { return (return_type)read<uintptr_t>(instance() + offset); }
-#define addstaticfield(return_type, klass, name, offset) Field<return_type>* klass::name() { static auto field = new Field<return_type>(instance(), offset); return field; }
-#define addgoref(klass) Unity::GameObject* klass::gameObject() { return (Unity::GameObject*)read<uintptr_t>(read<uintptr_t>(thisptr + 0x10) + 0x30);  }
+// this is kinda retarded and unreadable, sorry
+
+#define FIELD_DEF(return_type, klass, name, offset, is_static) \
+    return_type klass::name() { \
+        return read<return_type>(THISPTR + offset); \
+    } \
+	void klass::name##_set(return_type val) { \
+		return write<return_type>(val, THISPTR + offset); \
+	} 
+
+#define FIELD_DEC(return_type, name) \
+    return_type name(); \
+	void name##_set(return_type val); 
+
+#define STATIC_FIELD_DEF(return_type, klass, name, offset, is_static) \
+    return_type klass::name() { \
+        return read<return_type>(instance() + offset); \
+    } \
+	void klass::name##_set(return_type val) { \
+		return write<return_type>(val, instance() + offset); \
+	} 
+
+#define STATIC_FIELD_DEC(return_type, name) \
+    static return_type name(); \
+	static void name##_set(return_type val); 
+
+#define INSTANCE_DEF(class_name) \
+    static inline uintptr_t instance() { \
+        static uintptr_t inst = 0; \
+		if (!inst) { \
+			inst = class_name->get_vtable(mono::get_root_domain())->get_static_field_data(); \
+		} \
+        return inst; \
+    }
+
+#define GAMEOBJECT_DEF(klass) \
+    Unity::GameObject* klass::gameObject() { \
+        return (Unity::GameObject*)read<uintptr_t>( \
+            read<uintptr_t>(THISPTR + 0x10) + 0x30); \
+    }
+
 
 namespace Classes
 {
@@ -32,10 +68,13 @@ namespace Offsets
 
 	extern uintptr_t _isConnected;
 	extern uintptr_t isLoadingUGC;
+	extern uintptr_t _clients;
 
 	extern uintptr_t channel;
 	extern uintptr_t owner;
+
 	extern uintptr_t _isAdmin;
+	extern uintptr_t _splayer;
 
 	extern uintptr_t _equipment;
 	extern uintptr_t _asset;

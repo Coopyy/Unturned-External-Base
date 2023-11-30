@@ -89,16 +89,33 @@ namespace Unity
 		}
 	};
 
+	template <typename T>
+	class Array
+	{
+	public:
+		uint32_t Count()
+		{
+			return read<uint32_t>(THISPTR + 0x18);
+		}
+
+		T Get(uint32_t index)
+		{
+			return read<T>(read<uintptr_t>(THISPTR + 0x10) + 0x20 + (index * sizeof(T)));
+		}
+
+		// youd prob want a method to just read the whole array into a vector here
+	};
+
 	class Transform
 	{
 	public:
-		Field<Vector3>* position();
+		FIELD_DEC(Vector3, localPosition); 
 	};
 
 	class GameObject
 	{
 	public:
-		Transform* transform();
+		FIELD_DEC(Transform*, transform);
 	};
 }
 
