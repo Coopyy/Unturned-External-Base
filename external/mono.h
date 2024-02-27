@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include "mem.h"
 
+// https://github.com/reahly/mono-external-lib
 // NOTE: most of this has been updated to latest unity ver, but only functions used in the repo have been tested (the most important stuff)
 
 #define OFFSET(func, type, offset) type func { return read<type>( reinterpret_cast<uintptr_t>( this ) + offset ); } 
@@ -36,7 +37,7 @@ struct mono_root_domain_t
 {
 	OFFSET(domain_assemblies(), glist_t*, 0xA0)
 		OFFSET(domain_id(), int, 0x94)
-		OFFSET(jitted_function_table(), uintptr_t, 0x148) // untested
+		OFFSET(jitted_function_table(), uintptr_t, 0x120) // tested and epic
 };
 
 struct mono_table_info_t
