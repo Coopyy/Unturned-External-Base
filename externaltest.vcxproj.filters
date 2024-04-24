@@ -50,5 +50,8 @@
     <ClInclude Include="external\types\unity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="external\types\transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

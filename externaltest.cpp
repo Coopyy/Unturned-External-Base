@@ -23,7 +23,7 @@ int main()
 		system("pause");
 		return 0;
 	}
-	Log("Local Player: %p %s", localPlayer, localPlayer->gameObject()->transform()->localPosition().ToString().c_str());
+	Log("Local Player: %p %s", localPlayer, localPlayer->gameObject()->transform().position().toString().c_str());
 	printf("\n");
 
 
@@ -35,7 +35,7 @@ int main()
 	{
 		auto steamPlayer = clients->Get(i);
 		auto player = steamPlayer->player();
-		Log("Player %d: %p %s", i, player, player->gameObject()->transform()->localPosition().ToString().c_str());
+		Log("Player %d: %p %s", i, player, player->gameObject()->transform().position().toString().c_str());
 	}
 	printf("\n");
 
